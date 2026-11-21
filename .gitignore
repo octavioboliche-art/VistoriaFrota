@@ -13,6 +13,8 @@ $RECYCLE.BIN/
 *~
 logo2_base64.txt
 apply_logos.ps1
+push.bat
+push.ps1
 
 # IDEs e Editores
 .vscode/
