@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Vistoria de Frota</title>
 <style>
 /* ============================================================
@@ -920,6 +920,31 @@ body {
   .home-stats { grid-template-columns: repeat(4, 1fr); }
   .decision-buttons { grid-template-columns: 1fr 1fr; }
 }
+html, body { width:100%; min-width:0; overflow-x:hidden; }
+.app-header, .app-content, .page, .card, .modal-content { min-width:0; }
+.app-content { width:100%; padding-left:max(14px,env(safe-area-inset-left)); padding-right:max(14px,env(safe-area-inset-right)); }
+input,select,textarea,button { max-width:100%; font:inherit; }
+input,select,textarea { min-width:0; }
+img,video,svg { max-width:100%; }
+.vistoria-card-body,.vistoria-card-header,.modal-header { min-width:0; flex-wrap:wrap; gap:8px; }
+.summary-table { table-layout:fixed; overflow-wrap:anywhere; }
+.modal-content { max-height:90dvh; padding:20px 16px max(24px,env(safe-area-inset-bottom)); }
+.bottom-nav { padding-bottom:max(6px,env(safe-area-inset-bottom)); }
+@media(max-width:480px){.app-content{padding:12px 14px calc(84px + env(safe-area-inset-bottom))}.app-header{gap:6px}.app-header .header-btn{margin-left:0;padding:8px}.header-logos{min-width:0;flex:1}.home-hero{padding:22px 4px 18px}.home-hero .hero-logos-card{width:100%;padding:12px;gap:10px}.home-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.decision-buttons{grid-template-columns:1fr}.bottom-nav button{min-width:0;flex:1;padding:7px 3px;font-size:.65rem}.filter-bar,.action-row{flex-wrap:wrap;gap:8px}.card{padding:16px}.stepper-label{font-size:.68rem}.status-buttons{flex-wrap:wrap}.status-btn{min-height:42px}.toast{width:calc(100% - 28px);bottom:calc(78px + env(safe-area-inset-bottom));text-align:center}}
+/* Header sizing on narrow phones */
+.app-header { width:100%; max-width:100vw; min-width:0; }
+.app-header .header-logos { flex:0 1 auto; min-width:0; }
+.app-header h1 { min-width:0; flex:1 1 auto; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.app-header .header-btn { flex:0 0 40px; margin-left:0; }
+@media(max-width:480px){
+ .app-header { padding:10px 12px; gap:8px; }
+ .app-header .header-back { flex:0 0 32px; padding:4px; }
+ .app-header .header-logos { height:34px; padding:3px 6px; gap:5px; }
+ .app-header .header-logos img.logo-img { max-width:62px; height:24px; }
+ .app-header .header-logos svg.logo-cmt { max-width:58px; height:22px; }
+ .app-header .header-logos .logo-sep { height:20px; }
+ .app-header h1 { font-size:.95rem; }
+}
 </style>
 </head>
 <body>
@@ -942,7 +967,7 @@ body {
       </g>
     </svg>
   </div>
-  <button class="header-btn" id="btnConfigSheets" onclick="abrirModalConfigSheets()" title="Configurar Planilha Google">${svg('cloud')}</button>
+  <button class="header-btn" id="btnConfigSheets" onclick="abrirModalConfigSheets()" title="Configurar Planilha Google"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 16.2A4.8 4.8 0 0 0 18 7h-1.1A7 7 0 0 0 3 10.5 4.5 4.5 0 0 0 4.5 19H19a3 3 0 0 0 1-2.8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   <h1 id="headerTitle">Vistoria de Frota</h1>
 </header>
 
@@ -1370,27 +1395,27 @@ body {
 <div class="modal-overlay" id="modalSheetsOverlay" onclick="fecharModalSheets(event)">
   <div class="modal-content" style="max-width:560px;">
     <div class="modal-header">
-      <h3>${svg('cloud')} Configurar Planilha Google</h3>
-      <button class="modal-close" onclick="fecharModalSheets(event, true)">${svg('x')}</button>
+      <h3><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 16.2A4.8 4.8 0 0 0 18 7h-1.1A7 7 0 0 0 3 10.5 4.5 4.5 0 0 0 4.5 19H19a3 3 0 0 0 1-2.8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Configurar Planilha Google</h3>
+      <button class="modal-close" onclick="fecharModalSheets(event, true)">×</button>
     </div>
     <div class="card" style="margin-bottom:16px;">
-      <div class="card-title"><span class="icon">${svg('download')}</span> URL do Apps Script</div>
+      <div class="card-title"><span class="icon">↓</span> URL do Apps Script</div>
       <p style="font-size:0.8rem;color:var(--gray-600);margin-bottom:12px;">
         Cole aqui a URL do aplicativo da Web (termina com <code>/exec</code>), gerada ao implantar o <code>google-apps-script.js</code> na planilha.
       </p>
       <input type="text" id="inputSheetsUrl" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;padding:12px 16px;border:2px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;font-family:monospace;">
       <div style="display:flex;gap:8px;margin-top:12px;">
-        <button class="btn btn-outline" onclick="salvarConfigSheets()">${svg('save')} Salvar</button>
-        <button class="btn btn-primary" onclick="testarConexaoSheetsUI()">${svg('cloud')} Testar Conexão</button>
+        <button class="btn btn-outline" onclick="salvarConfigSheets()">▣ Salvar</button>
+        <button class="btn btn-primary" onclick="testarConexaoSheetsUI()"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 16.2A4.8 4.8 0 0 0 18 7h-1.1A7 7 0 0 0 3 10.5 4.5 4.5 0 0 0 4.5 19H19a3 3 0 0 0 1-2.8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Testar Conexão</button>
       </div>
       <div id="sheetsStatus" style="margin-top:10px;font-size:0.8rem;min-height:20px;"></div>
     </div>
     <div class="card" style="border:1px solid var(--primary);background:var(--primary-light);">
-      <div class="card-title" style="color:var(--primary-dark);"><span class="icon">${svg('upload')}</span> Sincronizar Vistorias</div>
+      <div class="card-title" style="color:var(--primary-dark);"><span class="icon">↑</span> Sincronizar Vistorias</div>
       <p style="font-size:0.8rem;color:var(--gray-700);margin-bottom:10px;">
         Envie todas as vistorias locais que ainda não foram sincronizadas para a planilha.
       </p>
-      <button class="btn btn-primary" style="width:auto;" onclick="sincronizarVistoriasParaSheetsUI()">${svg('upload')} Enviar Vistorias para Planilha</button>
+      <button class="btn btn-primary" style="width:auto;" onclick="sincronizarVistoriasParaSheetsUI()">↑ Enviar Vistorias para Planilha</button>
     </div>
   </div>
 </div>
@@ -2796,8 +2821,9 @@ async function enviarVistoriaParaSheets(vistoria) {
   const payload = { vistoria };
   const resp = await fetch(CONFIG.GOOGLE_APPS_SCRIPT_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+    redirect: 'follow'
   });
   const data = await resp.json();
   if (data.status === 'error') {
