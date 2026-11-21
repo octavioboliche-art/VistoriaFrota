@@ -2494,30 +2494,9 @@ async function buscarHistoricoPrefixo() {
     return;
   }
 
-  // Análise de defeitos recorrentes
-  const contagemDefeitos = {};
-  vistoriasVeiculo.forEach(v => {
-    CHECKLIST_ITEMS.forEach(item => {
-      if (v.checklist[item.key]?.status === 'defeito') {
-        contagemDefeitos[item.nome] = (contagemDefeitos[item.nome] || 0) + 1;
-      }
-    });
-  });
-
-  const defeitosRecorrentes = Object.entries(contagemDefeitos).sort((a, b) => b[1] - a[1]);
-  let defeitosHtml = '';
-  if (defeitosRecorrentes.length > 0) {
-    defeitosHtml = `
-      <div class="card" style="background:var(--warning-light);border:1px solid var(--warning);margin-top:16px;">
-        <div class="card-title" style="color:var(--gray-900);font-size:0.9rem;"><span class="icon">${svg('alert', 'stroke:var(--warning);')}</span> Defeitos Recorrentes</div>
-        <div style="font-size:0.85rem;">
-          ${defeitosRecorrentes.map(([nome, qtd]) => `<div><strong>${nome}:</strong> apontado em ${qtd} vistoria(s)</div>`).join('')}
-        </div>
-      </div>`;
-  }
-
   // Timeline com cálculo de km entre vistorias
   let timelineHtml = '<div style="margin-top:16px;">';
+  const defeitosHtml = '';
   vistoriasVeiculo.forEach((v, idx) => {
     const vAnterior = vistoriasVeiculo[idx + 1];
     let kmDiff = '';
@@ -2564,63 +2543,31 @@ function abrirModalBackup() {
       <h3>${svg('save')} Backup e Exportação de Dados</h3>
       <button class="modal-close" onclick="fecharModal(event, true)">${svg('x')}</button>
     </div>
-
     <div class="card" style="margin-bottom:14px;">
       <div class="card-title"><span class="icon">${svg('download')}</span> Exportar Dados</div>
-      <p style="font-size:0.85rem;color:var(--gray-600);margin-bottom:12px;">
-        Baixe cópias dos seus registros para guardar no computador ou abrir no Excel.
-      </p>
-      <div style="display:flex;gap:8px;">
+      <p style="font-size:0.85rem;color:var(--gray-600);margin-bottom:12px;">Baixe cópias dos seus registros para guardar no computador ou abrir no Excel.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn btn-primary" onclick="exportarJSON()">${svg('download')} Baixar JSON (Completo)</button>
         <button class="btn btn-outline" onclick="exportarCSV()">${svg('download')} Baixar CSV (Excel)</button>
       </div>
     </div>
-
     <div class="card" style="margin-bottom:14px;">
-      <div class="card-title"><span class="icon">${svg('upload')}</span> Restaurar / Importar Backup</div>
-      <p style="font-size:0.85rem;color:var(--gray-600);margin-bottom:12px;">
-        Selecione um arquivo JSON de backup exportado anteriormente.
-      </p>
+      <div class="card-title"><span class="icon">${svg('upload')}</span> Importar Backup</div>
+      <p style="font-size:0.85rem;color:var(--gray-600);margin-bottom:12px;">Selecione um arquivo JSON de backup exportado anteriormente.</p>
       <input type="file" id="importFileInput" accept=".json" style="margin-bottom:12px;width:100%;">
       <div style="display:flex;gap:8px;">
         <button class="btn btn-outline" onclick="processarImportacao('merge')">Mesclar Novos</button>
         <button class="btn btn-outline" style="color:var(--danger);border-color:var(--danger);" onclick="processarImportacao('replace')">Substituir Tudo</button>
       </div>
     </div>
-
     <div class="card" style="border:1px solid var(--danger);background:var(--danger-light);">
       <div class="card-title" style="color:var(--danger);"><span class="icon">${svg('trash')}</span> Limpar Dados</div>
-      <p style="font-size:0.85rem;color:var(--gray-700);margin-bottom:10px;">
-        Apaga permanentemente todas as vistorias e vídeos armazenados neste dispositivo.
-      </p>
-      <button class="btn" style="background:var(--danger);color:#fff;" onclick="limparTudoComConfirmacao()">
-        ${svg('trash')} Apagar Todo o Banco de Dados
-      </button>
+      <p style="font-size:0.85rem;color:var(--gray-700);margin-bottom:10px;">Apaga permanentemente todas as vistorias e vídeos armazenados neste dispositivo.</p>
+      <button class="btn" style="background:var(--danger);color:#fff;" onclick="limparTudoComConfirmacao()">${svg('trash')} Apagar Todo o Banco de Dados</button>
     </div>
   `;
   document.getElementById('modalOverlay').classList.add('active');
 }
-      </p>
-      <input type="file" id="importFileInput" accept=".json" style="margin-bottom:12px;width:100%;">
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-outline" onclick="processarImportacao('merge')">Mesclar Novos</button>
-        <button class="btn btn-outline" style="color:var(--danger);border-color:var(--danger);" onclick="processarImportacao('replace')">Substituir Tudo</button>
-      </div>
-    </div>
-
-    <div class="card" style="border:1px solid var(--danger);background:var(--danger-light);">
-      <div class="card-title" style="color:var(--danger);"><span class="icon">${svg('trash')}</span> Limpar Dados</div>
-      <p style="font-size:0.85rem;color:var(--gray-700);margin-bottom:10px;">
-        Apaga permanentemente todas as vistorias e vídeos armazenados neste dispositivo.
-      </p>
-      <button class="btn" style="background:var(--danger);color:#fff;" onclick="limparTudoComConfirmacao()">
-        ${svg('trash')} Apagar Todo o Banco de Dados
-      </button>
-    </div>
-  `;
-  document.getElementById('modalOverlay').classList.add('active');
-}
-
 async function exportarJSON() {
   try {
     const vistorias = await listarVistorias();
