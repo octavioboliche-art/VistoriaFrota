@@ -1,70 +1,70 @@
-# Vistoria de Frota - Inspeção Veicular 100% Offline
+﻿# Vistoria de Frota - InspeÃ§Ã£o Veicular 100% Offline
 
-Sistema moderno, responsivo e 100% offline para vistoria, auditoria técnica e controle de manutenção de frotas operacionais (ônibus, micro-ônibus e utilitários).
+Sistema moderno, responsivo e 100% offline para vistoria, auditoria tÃ©cnica e controle de manutenÃ§Ã£o de frotas operacionais (Ã´nibus, micro-Ã´nibus e utilitÃ¡rios).
 
-Desenvolvido para atender operações de campo em garagens, terminais rodoviários e pátios sem dependência de conexão de internet.
+Desenvolvido para atender operaÃ§Ãµes de campo em garagens, terminais rodoviÃ¡rios e pÃ¡tios sem dependÃªncia de conexÃ£o de internet.
 
 ---
 
-## 🚀 Características Principais
+## ðŸš€ CaracterÃ­sticas Principais
 
-- **100% Offline & Monolítico:** Todo o sistema roda em um único arquivo HTML (`vistoria.html`), sem dependências externas de CDN, servidor ou banco de dados remoto.
-- **Armazenamento Local Robusto (IndexedDB):** Persistência segura no navegador com suporte a transações e esquemas versionados (`DB_VERSION = 2`).
-- **Checklist Técnico Completo:**
+- **100% Offline & MonolÃ­tico:** Todo o sistema roda em um Ãºnico arquivo HTML (`index.html`), sem dependÃªncias externas de CDN, servidor ou banco de dados remoto.
+- **Armazenamento Local Robusto (IndexedDB):** PersistÃªncia segura no navegador com suporte a transaÃ§Ãµes e esquemas versionados (`DB_VERSION = 2`).
+- **Checklist TÃ©cnico Completo:**
   - Pneus e Rodas (calibragem, desgaste, estepe)
-  - Iluminação e Sinalização (faróis, setas, lanternas, freio, ré)
-  - Freios e Suspensão (nível de fluido, freio de estacionamento, ruídos)
-  - Motor e Transmissão (óleo, arrefecimento, vazamentos, embreagem)
-  - Segurança e Emergência (extintor, cintos, tacógrafo, triângulo)
+  - IluminaÃ§Ã£o e SinalizaÃ§Ã£o (farÃ³is, setas, lanternas, freio, rÃ©)
+  - Freios e SuspensÃ£o (nÃ­vel de fluido, freio de estacionamento, ruÃ­dos)
+  - Motor e TransmissÃ£o (Ã³leo, arrefecimento, vazamentos, embreagem)
+  - SeguranÃ§a e EmergÃªncia (extintor, cintos, tacÃ³grafo, triÃ¢ngulo)
   - Carroceria e Acessibilidade (lataria, elevador PCD, bancos, portas)
-  - Documentação (CRLV, CNH, seguro, certificado tacógrafo)
-- **Evidências em Foto e Vídeo:**
-  - Captura direta via câmera (`navigator.mediaDevices.getUserMedia` / `MediaRecorder`)
-  - Galeria de mídias com visualização em modal e exportação
-- **Dashboard e Histórico por Veículo:**
-  - Estatísticas de aprovação, reprovação e pendências
-  - Linha do tempo e histórico individual por número de frota/placa
-- **Relatório e Backup:**
-  - Relatório formatado pronto para impressão ou salvamento em PDF
-  - Exportação e importação de dados em **JSON** e **CSV**
+  - DocumentaÃ§Ã£o (CRLV, CNH, seguro, certificado tacÃ³grafo)
+- **EvidÃªncias em Foto e VÃ­deo:**
+  - Captura direta via cÃ¢mera (`navigator.mediaDevices.getUserMedia` / `MediaRecorder`)
+  - Galeria de mÃ­dias com visualizaÃ§Ã£o em modal e exportaÃ§Ã£o
+- **Dashboard e HistÃ³rico por VeÃ­culo:**
+  - EstatÃ­sticas de aprovaÃ§Ã£o, reprovaÃ§Ã£o e pendÃªncias
+  - Linha do tempo e histÃ³rico individual por nÃºmero de frota/placa
+- **RelatÃ³rio e Backup:**
+  - RelatÃ³rio formatado pronto para impressÃ£o ou salvamento em PDF
+  - ExportaÃ§Ã£o e importaÃ§Ã£o de dados em **JSON** e **CSV**
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## ðŸ› ï¸ Tecnologias Utilizadas
 
 - **HTML5 & CSS3 Moderno:** Design responsivo adaptado para smartphones, tablets e desktops (Mobile-First).
-- **Vanilla JavaScript (ES6+):** Código limpo, sem frameworks pesados, garantindo alta velocidade de carregamento e execução.
-- **IndexedDB API:** Armazenamento relacional offline estruturado com índices de busca rápida.
-- **MediaStream & MediaRecorder APIs:** Captura de vídeo nativa com fallback e pré-visualização instantânea.
-- **SVG Design System:** Ícones e logotipos embutidos em SVG nativo e vetores inline.
+- **Vanilla JavaScript (ES6+):** CÃ³digo limpo, sem frameworks pesados, garantindo alta velocidade de carregamento e execuÃ§Ã£o.
+- **IndexedDB API:** Armazenamento relacional offline estruturado com Ã­ndices de busca rÃ¡pida.
+- **MediaStream & MediaRecorder APIs:** Captura de vÃ­deo nativa com fallback e prÃ©-visualizaÃ§Ã£o instantÃ¢nea.
+- **SVG Design System:** Ãcones e logotipos embutidos em SVG nativo e vetores inline.
 
 ---
 
-## 📂 Estrutura do Projeto
+## ðŸ“‚ Estrutura do Projeto
 
 ```text
-├── vistoria.html                        # Aplicação monolítica completa (HTML + CSS + JS)
-├── logo.svg                             # Logotipo vetorial oficial CMT
-├── Captura de tela 2026-11-21 140909.png# Logotipo institucional parceiro
-├── contexto.md                          # Documento de arquitetura, contexto e objetivos
-├── dor.md                               # Mapeamento de dores operacionais e soluções
-├── sprint.md                            # Roadmap de engenharia de software e sprints
-└── README.md                            # Documentação do repositório
+â”œâ”€â”€ index.html                        # AplicaÃ§Ã£o monolÃ­tica completa (HTML + CSS + JS)
+â”œâ”€â”€ logo.svg                             # Logotipo vetorial oficial CMT
+â”œâ”€â”€ Captura de tela 2026-11-21 140909.png# Logotipo institucional parceiro
+â”œâ”€â”€ contexto.md                          # Documento de arquitetura, contexto e objetivos
+â”œâ”€â”€ dor.md                               # Mapeamento de dores operacionais e soluÃ§Ãµes
+â”œâ”€â”€ sprint.md                            # Roadmap de engenharia de software e sprints
+â””â”€â”€ README.md                            # DocumentaÃ§Ã£o do repositÃ³rio
 ```
 
 ---
 
-## 🏁 Como Executar
+## ðŸ Como Executar
 
-1. Baixe ou clone o repositório:
+1. Baixe ou clone o repositÃ³rio:
    ```bash
    git clone https://github.com/octavioboliche-art/VistoriaFrota.git
    ```
-2. Dê um duplo clique no arquivo `vistoria.html` ou abra-o em qualquer navegador web moderno (Google Chrome, Microsoft Edge, Firefox, Safari).
-3. **Não requer instalação de servidor, Node.js ou banco de dados.** Pronto para uso imediato em qualquer computador ou dispositivo móvel!
+2. DÃª um duplo clique no arquivo `index.html` ou abra-o em qualquer navegador web moderno (Google Chrome, Microsoft Edge, Firefox, Safari).
+3. **NÃ£o requer instalaÃ§Ã£o de servidor, Node.js ou banco de dados.** Pronto para uso imediato em qualquer computador ou dispositivo mÃ³vel!
 
 ---
 
-## 📄 Licença
+## ðŸ“„ LicenÃ§a
 
 Uso interno operacional. Todos os direitos reservados.

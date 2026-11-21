@@ -945,6 +945,54 @@ img,video,svg { max-width:100%; }
  .app-header .header-logos .logo-sep { height:20px; }
  .app-header h1 { font-size:.95rem; }
 }
+/* Motion system inspired by the supplied studio references: short, purposeful, GPU-friendly */
+.page.active { animation: page-enter .28s cubic-bezier(.2,.75,.25,1) both; }
+@keyframes page-enter { from { opacity:0; transform:translate3d(0,8px,0) } to { opacity:1; transform:translate3d(0,0,0) } }
+.home-hero .hero-logos-card { animation: hero-settle .65s cubic-bezier(.2,.8,.2,1) both; transform-style:preserve-3d; }
+@keyframes hero-settle { from { opacity:0; transform:perspective(800px) rotateX(-8deg) translateY(12px) } to { opacity:1; transform:perspective(800px) rotateX(0) translateY(0) } }
+.btn-nova-vistoria { position:relative; overflow:hidden; isolation:isolate; background:linear-gradient(110deg,#d8001b,#f01832 55%,#c90018); box-shadow:0 8px 18px rgba(221,0,28,.20); }
+.btn-nova-vistoria::after { content:""; position:absolute; inset:-40% auto -40% -35%; width:24%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.24),transparent); transform:skewX(-20deg); animation:button-sheen 5s ease-in-out infinite; z-index:-1; }
+@keyframes button-sheen { 0%,72%,100% { left:-35% } 35% { left:115% } }
+.btn-nova-vistoria:hover { background:linear-gradient(110deg,#c90018,#e3122c); transform:translateY(-2px); box-shadow:0 12px 24px rgba(221,0,28,.25); }
+.btn-nova-vistoria:active { transform:translateY(1px) scale(.99); }
+.stat-card { transition:transform .22s ease,box-shadow .22s ease; animation:stat-arrive .42s ease both; }
+.stat-card:nth-child(2) { animation-delay:.05s }.stat-card:nth-child(3) { animation-delay:.1s }.stat-card:nth-child(4) { animation-delay:.15s }
+@keyframes stat-arrive { from { opacity:0; transform:translateY(9px) } to { opacity:1; transform:translateY(0) } }
+.stat-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); }
+.card,.vistoria-card,.decision-btn,.bottom-nav button,.btn { transition:transform .2s ease,box-shadow .2s ease,background-color .2s ease,border-color .2s ease; }
+/* Small CSS 3D fleet emblem; no external model or WebGL dependency */
+.hero-3d-mark { width:76px;height:58px;margin:0 auto 14px;position:relative;perspective:360px; }
+.hero-3d-mark .bus-shell { position:absolute;left:12px;top:8px;width:52px;height:34px;border-radius:8px 12px 6px 6px;background:linear-gradient(145deg,#fff 0 58%,#e7efff 59%);border:1px solid #cfdbef;box-shadow:8px 9px 0 -3px #063888,0 10px 18px #06388822;transform:rotateY(-18deg) rotateX(5deg);animation:bus-float 4s ease-in-out infinite; }
+.hero-3d-mark .bus-shell::before { content:"";position:absolute;left:5px;right:5px;top:5px;height:12px;border-radius:4px 7px 2px 2px;background:linear-gradient(90deg,#8fc4ef,#d9efff);border-bottom:3px solid #063888; }
+.hero-3d-mark .bus-shell::after { content:"";position:absolute;left:8px;bottom:-5px;width:8px;height:8px;border-radius:50%;background:#26364a;box-shadow:27px 0 #26364a; }
+.hero-3d-mark .bus-stripe { position:absolute;left:16px;top:29px;width:41px;height:4px;background:#dd001c;transform:skewY(-7deg);border-radius:4px; }
+@keyframes bus-float { 0%,100% { transform:translateY(0) rotateY(-18deg) rotateX(5deg) } 50% { transform:translateY(-4px) rotateY(-12deg) rotateX(2deg) } }
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}.page.active{transform:none}}
+/* Richer tactile feedback for inspection flow */
+.status-btn { position:relative; overflow:hidden; transform:translateZ(0); }
+.status-btn::after { content:""; position:absolute; inset:0; background:radial-gradient(circle,rgba(255,255,255,.45) 0,transparent 65%); opacity:0; transform:scale(.2); transition:transform .28s ease,opacity .28s ease; pointer-events:none; }
+.status-btn:active::after { opacity:1; transform:scale(1.8); }
+.status-btn.selected-ok,.status-btn.selected-defeito,.status-btn.selected-na { animation:choice-pop .25s cubic-bezier(.2,.8,.2,1); }
+@keyframes choice-pop { 50% { transform:scale(1.07) } }
+.checklist-item { transition:background-color .24s ease,border-color .24s ease,box-shadow .24s ease,transform .24s ease; }
+.checklist-item.status-ok { box-shadow:inset 3px 0 var(--success),0 3px 12px rgba(46,125,50,.08); }
+.checklist-item.status-defeito { box-shadow:inset 3px 0 var(--danger),0 3px 12px rgba(198,40,40,.08); animation:defect-nudge .32s ease; }
+@keyframes defect-nudge { 25% { transform:translateX(3px) } 65% { transform:translateX(-2px) } }
+.decision-btn { transform:translateZ(0); }
+.decision-btn.selected-liberar,.decision-btn.selected-oficina { animation:decision-select .3s cubic-bezier(.2,.8,.2,1); box-shadow:0 8px 20px rgba(6,56,136,.1); }
+@keyframes decision-select { 45% { transform:translateY(-4px) scale(1.025) } }
+.bottom-nav button .nav-icon { transition:transform .22s cubic-bezier(.2,.8,.2,1); }
+.bottom-nav button.active .nav-icon { transform:translateY(-2px) scale(1.08); }
+.filter-btn { transition:color .18s ease,background-color .18s ease,transform .18s ease,box-shadow .18s ease; }
+.filter-btn:active,.btn:active { transform:scale(.97); }
+.badge { animation:badge-in .24s ease both; }
+@keyframes badge-in { from { opacity:0; transform:scale(.88) } to { opacity:1; transform:scale(1) } }
+.progress-bar-fill { position:relative; overflow:hidden; }
+.progress-bar-fill::after { content:""; position:absolute; inset:0; background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent); transform:translateX(-100%); animation:progress-glint 2.8s ease-in-out infinite; }
+@keyframes progress-glint { 55%,100% { transform:translateX(100%) } }
+.modal-overlay.active .modal-content { animation:modal-arrive .32s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes modal-arrive { from { opacity:.7; transform:translateY(24px) scale(.985) } to { opacity:1; transform:translateY(0) scale(1) } }
+@media(prefers-reduced-motion:reduce){.status-btn.selected-ok,.status-btn.selected-defeito,.status-btn.selected-na,.checklist-item.status-defeito,.decision-btn.selected-liberar,.decision-btn.selected-oficina,.badge,.modal-overlay.active .modal-content{animation:none!important}}
 </style>
 </head>
 <body>
@@ -996,6 +1044,7 @@ img,video,svg { max-width:100%; }
           </svg>
         </div>
       </div>
+      <div class="hero-3d-mark" aria-hidden="true"><div class="bus-shell"></div><div class="bus-stripe"></div></div>
       <h2>Vistoria de Frota</h2>
       <p>Sistema de inspeção veicular offline</p>
     </div>
