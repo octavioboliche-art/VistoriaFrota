@@ -196,6 +196,12 @@ body {
 }
 .app-header .header-back.visible { display: block; }
 .app-header .header-back:hover { background: rgba(255,255,255,0.15); }
+.app-header .header-btn {
+  background: none; border: none; color: #fff; font-size: 1.3rem;
+  cursor: pointer; padding: 4px 8px; border-radius: 8px; margin-left: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.app-header .header-btn:hover { background: rgba(255,255,255,0.15); }
 
 .app-content {
   max-width: 600px;
@@ -936,6 +942,7 @@ body {
       </g>
     </svg>
   </div>
+  <button class="header-btn" id="btnConfigSheets" onclick="abrirModalConfigSheets()" title="Configurar Planilha Google">${svg('cloud')}</button>
   <h1 id="headerTitle">Vistoria de Frota</h1>
 </header>
 
@@ -1358,6 +1365,37 @@ body {
 </div>
 
 <!-- ============================================================
+     MODAL CONFIGURAÇÃO GOOGLE SHEETS
+     ============================================================ -->
+<div class="modal-overlay" id="modalSheetsOverlay" onclick="fecharModalSheets(event)">
+  <div class="modal-content" style="max-width:560px;">
+    <div class="modal-header">
+      <h3>${svg('cloud')} Configurar Planilha Google</h3>
+      <button class="modal-close" onclick="fecharModalSheets(event, true)">${svg('x')}</button>
+    </div>
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title"><span class="icon">${svg('download')}</span> URL do Apps Script</div>
+      <p style="font-size:0.8rem;color:var(--gray-600);margin-bottom:12px;">
+        Cole aqui a URL do aplicativo da Web (termina com <code>/exec</code>), gerada ao implantar o <code>google-apps-script.js</code> na planilha.
+      </p>
+      <input type="text" id="inputSheetsUrl" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;padding:12px 16px;border:2px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;font-family:monospace;">
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="btn btn-outline" onclick="salvarConfigSheets()">${svg('save')} Salvar</button>
+        <button class="btn btn-primary" onclick="testarConexaoSheetsUI()">${svg('cloud')} Testar Conexão</button>
+      </div>
+      <div id="sheetsStatus" style="margin-top:10px;font-size:0.8rem;min-height:20px;"></div>
+    </div>
+    <div class="card" style="border:1px solid var(--primary);background:var(--primary-light);">
+      <div class="card-title" style="color:var(--primary-dark);"><span class="icon">${svg('upload')}</span> Sincronizar Vistorias</div>
+      <p style="font-size:0.8rem;color:var(--gray-700);margin-bottom:10px;">
+        Envie todas as vistorias locais que ainda não foram sincronizadas para a planilha.
+      </p>
+      <button class="btn btn-primary" style="width:auto;" onclick="sincronizarVistoriasParaSheetsUI()">${svg('upload')} Enviar Vistorias para Planilha</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
      TOAST
      ============================================================ -->
 <div class="toast" id="toast"></div>
@@ -1373,6 +1411,13 @@ const DB_NAME = 'VistoriaFrotaDB';
 const DB_VERSION = 2;
 const STORE_NAME = 'vistorias';
 const VIDEO_STORE = 'videos';
+
+/* ============================================================
+   CONFIGURAÇÃO GOOGLE SHEETS (Apps Script)
+   ============================================================ */
+const CONFIG = {
+  GOOGLE_APPS_SCRIPT_URL: localStorage.getItem('config_sheets_url') || 'https://script.google.com/macros/s/AKfycbzKRaIhLVDA2ZcMNyZyzIJtV_CyllIIR19OwDH2tFSI4Oy8e1HhooYOVT4saIe4KAa9/exec'
+};
 
 function abrirDB() {
   return new Promise((resolve, reject) => {
@@ -1495,7 +1540,8 @@ const ICONS = {
   upload: '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
   trash: '<svg class="icon-svg" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>',
   play: '<svg class="icon-svg filled" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg>',
-  x: '<svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+  x: '<svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  cloud: '<svg class="icon-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5.5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>'
 };
 
 function svg(name, extraStyle = '') {
@@ -2057,6 +2103,13 @@ async function finalizarVistoria() {
     await renderConfirmacao();
     navigateTo('confirmacao');
     showToast('Vistoria salva com sucesso!');
+    if (CONFIG.GOOGLE_APPS_SCRIPT_URL) {
+      await enviarVistoriaParaSheets(vistoriaAtual);
+      vistoriaAtual.sincronizado = true;
+      vistoriaAtual.sincronizadoEm = new Date().toISOString();
+      await salvarVistoria(vistoriaAtual);
+      showToast('Enviado para a planilha!');
+    }
   } catch (err) {
     showToast('Erro ao salvar: ' + err.message);
     console.error(err);
@@ -2734,6 +2787,112 @@ async function limparTudoComConfirmacao() {
     atualizarPainel();
     atualizarGaleria();
   };
+}
+
+/* ============================================================
+   SINCRONIZAÇÃO GOOGLE SHEETS
+   ============================================================ */
+
+function abrirModalConfigSheets() {
+  document.getElementById('inputSheetsUrl').value = CONFIG.GOOGLE_APPS_SCRIPT_URL;
+  document.getElementById('sheetsStatus').textContent = '';
+  document.getElementById('modalSheetsOverlay').classList.add('active');
+}
+
+function fecharModalSheets(event, forceClose) {
+  if (forceClose || event.target === document.getElementById('modalSheetsOverlay')) {
+    document.getElementById('modalSheetsOverlay').classList.remove('active');
+  }
+}
+
+async function salvarConfigSheets() {
+  const input = document.getElementById('inputSheetsUrl');
+  const url = input.value.trim();
+  if (url && !url.startsWith('https://')) {
+    document.getElementById('sheetsStatus').textContent = 'URL deve começar com https://';
+    return;
+  }
+  CONFIG.GOOGLE_APPS_SCRIPT_URL = url;
+  localStorage.setItem('config_sheets_url', url);
+  document.getElementById('sheetsStatus').textContent = url ? 'URL salva com sucesso!' : 'URL removida.';
+  document.getElementById('sheetsStatus').style.color = url ? 'var(--success)' : 'var(--gray-600)';
+}
+
+async function testarConexaoSheets() {
+  if (!CONFIG.GOOGLE_APPS_SCRIPT_URL) {
+    throw new Error('URL do Google Apps Script não configurada.');
+  }
+  const resp = await fetch(CONFIG.GOOGLE_APPS_SCRIPT_URL, { method: 'GET' });
+  if (!resp.ok) throw new Error('Erro HTTP: ' + resp.status);
+  const data = await resp.json();
+  if (data.status === 'error') throw new Error(data.message);
+  return data;
+}
+
+async function testarConexaoSheetsUI() {
+  try {
+    const data = await testarConexaoSheets();
+    document.getElementById('sheetsStatus').textContent = 'Conectado! ' + (data.message || '') + ' (Total na planilha: ' + (data.totalVistorias || 0) + ')';
+    document.getElementById('sheetsStatus').style.color = 'var(--success)';
+    showToast('Conexão com a planilha OK!');
+  } catch (e) {
+    document.getElementById('sheetsStatus').textContent = 'Erro: ' + e.message;
+    document.getElementById('sheetsStatus').style.color = 'var(--danger)';
+    showToast('Erro na conexão: ' + e.message);
+  }
+}
+
+async function enviarVistoriaParaSheets(vistoria) {
+  if (!CONFIG.GOOGLE_APPS_SCRIPT_URL) {
+    throw new Error('URL do Google Apps Script não configurada.');
+  }
+  const payload = { vistoria };
+  const resp = await fetch(CONFIG.GOOGLE_APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await resp.json();
+  if (data.status === 'error') {
+    throw new Error(data.message);
+  }
+  return data;
+}
+
+async function sincronizarVistoriasParaSheets() {
+  if (!CONFIG.GOOGLE_APPS_SCRIPT_URL) {
+    showToast('Configure a URL do Google Apps Script primeiro.');
+    return { enviados: 0, erros: 0 };
+  }
+  const vistorias = await listarVistorias();
+  const pendentes = vistorias.filter(v => v.sincronizado !== true);
+  if (pendentes.length === 0) {
+    showToast('Todas as vistorias já estão sincronizadas.');
+    return { enviados: 0, erros: 0 };
+  }
+  let enviados = 0;
+  let erros = 0;
+  for (const v of pendentes) {
+    try {
+      await enviarVistoriaParaSheets(v);
+      v.sincronizado = true;
+      v.sincronizadoEm = new Date().toISOString();
+      await salvarVistoria(v);
+      enviados++;
+    } catch (e) {
+      erros++;
+      console.error('Erro ao sincronizar vistoria ' + v.id, e);
+    }
+  }
+  showToast(`Sincronização concluída: ${enviados} enviada(s), ${erros} erro(s).`);
+  return { enviados, erros };
+}
+
+async function sincronizarVistoriasParaSheetsUI() {
+  const resultado = await sincronizarVistoriasParaSheets();
+  if (resultado.enviados > 0) {
+    fecharModalSheets(null, true);
+  }
 }
 
 /* ============================================================
