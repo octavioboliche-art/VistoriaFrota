@@ -1,0 +1,21 @@
+# Ambientes e Sistema Operacional
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Temporários e Logs
+*.tmp
+*.bak
+*.log
+*.swp
+*~
+logo2_base64.txt
+apply_logos.ps1
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
